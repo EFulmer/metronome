@@ -7,19 +7,32 @@
            (java.net URL)
            (java.util Timer TimerTask)))
 
-; Source for play-url and play-file:
-; http://www.gettingclojure.com/cookbook:system
-(defn play-url [url-string]
-  (.play (Applet/newAudioClip (URL. url-string))))
+; Source: 
+; http://comments.gmane.org/gmane.comp.java.clojure.user/18925
+(defn play
+  "Plays an audio file. Blocks until playback is complete."
+  [file]
+  (let [f (if (instance? java.io.File file) file (java.io.File. file))]
+    (with-open [aif (javax.sound.sampled.AudioSystem/getAudioInputStream f)
+                ais (javax.sound.sampled.AudioSystem/getAudioInputStream
+                      javax.sound.sampled.AudioFormat$Encoding/PCM_SIGNED aif)]
+      (let [af (.getFormat ais)]
+        (with-open [line (javax.sound.sampled.AudioSystem/getSourceDataLine af)]
+          (.open line af)
+          (let [bufsize (.getBufferSize line)
+                buf (into-array Byte/TYPE (repeat bufsize (byte 0)))]
+            (.start line)
+            (loop []
+              (let [br (.read ais buf 0 bufsize)]
+                (if-not (= -1 br)
+                  (do
+                    (.write line buf 0 br)
+                    (recur))
+                  (doto line (.drain) (.stop))))))))))) 
 
-(defn play-file [file-name]
-  (let [absolute-name (.getAbsolutePath (File. file-name))
-        url-string (str "file://" absolute-name)]
-    (play-url url-string)))
- 
 (def click 
   (proxy [TimerTask] [] 
-             (run [] (play-file "audio/click.mp3"))))
+             (run [] (play "./src/metronome/audio/click.wav"))))
 
 (def clicky (new Timer))
 
@@ -29,5 +42,4 @@
   ;; work around dangerous default behaviour in Clojure
   ; (alter-var-root #'*read-eval* (constantly false))
   ; (println "Hello, World!")
-  (.scheduleAtFixedRate clicky (long 1000) (long 1000))
-  )
+  (.scheduleAtFixedRate clicky click (long 1000) (long 1000)))
