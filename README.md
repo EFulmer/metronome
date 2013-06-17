@@ -1,35 +1,14 @@
 # metronome
 
-FIXME: description
+Basic metronome written in Clojure. Presently, *very* basic. 
 
-## Installation
+## Future Improvements:
 
-Download from http://example.com/FIXME.
-
-## Usage
-
-FIXME: explanation
-
-    $ java -jar metronome-0.1.0-standalone.jar [args]
-
-## Options
-
-FIXME: listing of options this app accepts.
-
-## Examples
-
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
++ Support for measures
++ GUI?
 
 ## License
 
-Copyright © 2013 FIXME
+Copyright © 2013 Eric Fulmer.
 
 Distributed under the Eclipse Public License, the same as Clojure.
