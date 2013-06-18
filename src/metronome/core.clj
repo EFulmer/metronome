@@ -1,10 +1,11 @@
-; TODO: nicer method of playing files than Applet. Look into Media/MediaPlayer?
+; TODO: 
+; nicer/more idiomatic way to play sound - using Clojure's concurrency model?
+; let user provide their own time and sound
+; GUI
 
 (ns metronome.core
   (:gen-class :main true)
-  (:import (java.applet Applet)
-           (java.io File)
-           (java.net URL)
+  (:import (java.io File)
            (java.util Timer TimerTask)))
 
 ; Source: 
@@ -43,3 +44,4 @@
   ; (alter-var-root #'*read-eval* (constantly false))
   ; (println "Hello, World!")
   (.scheduleAtFixedRate clicky click (long 1000) (long 1000)))
+
