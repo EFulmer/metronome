@@ -39,9 +39,5 @@
 
 (defn -main
   "Starts a metronome."
-  [& args]
-  ;; work around dangerous default behaviour in Clojure
-  ; (alter-var-root #'*read-eval* (constantly false))
-  ; (println "Hello, World!")
-  (.scheduleAtFixedRate clicky click (long 1000) (long 1000)))
-
+  ([] (-main 60))
+  ([x] (.scheduleAtFixedRate clicky click (long (* (/ 60 x) 1000)) (long (* (/ 60 x) 1000)))))
